@@ -13,11 +13,11 @@ import okhttp3.Response;
 
 public class NetworkUtils {
 
-    public static final String BASE_URL ="https://newsapi.org/v2/top-headlines";
-    public static final String COUNTRY ="country";
-    public static final String API_KEY  ="apiKey";
-    public static final String countryValue ="us";
-    public static final String api_keyValue ="YOU_API_KEY";
+    private static final String BASE_URL ="https://newsapi.org/v2/top-headlines";
+    private static final String COUNTRY ="country";
+    private static final String API_KEY  ="apiKey";
+    private static final String countryValue ="us";
+    private static final String api_keyValue ="2331f4053d7647e8a3c595f6c0a49db0";
 
     public static URL buildURL(){
 

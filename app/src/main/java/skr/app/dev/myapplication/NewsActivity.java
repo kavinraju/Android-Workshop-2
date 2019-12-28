@@ -1,5 +1,7 @@
 package skr.app.dev.myapplication;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 
@@ -16,25 +18,31 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.transition.Transition;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import skr.app.dev.myapplication.adapter.NewsAdapter;
 import skr.app.dev.myapplication.utils.JSONUtils;
 import skr.app.dev.myapplication.utils.NetworkUtils;
 import skr.app.dev.myapplication.utils.NewsPojo;
 
-public class NewsActivity extends AppCompatActivity {
+public class NewsActivity extends AppCompatActivity implements NewsAdapter.NewsTitleClickListener {
 
 
     private RecyclerView recyclerView;
@@ -42,12 +50,15 @@ public class NewsActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<NewsPojo> newsArrayList;
 
+    public static String SHARED_ELEMENT_TRANSITION_EXTRA = "sharedElementTransition";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("World News App");
         setSupportActionBar(toolbar);
 
         recyclerView = findViewById(R.id.recycler_view);
@@ -68,7 +79,7 @@ public class NewsActivity extends AppCompatActivity {
                         if (response != null) {
 
                             newsArrayList = JSONUtils.getNewsArrayList(response);
-                            newsAdapter = new NewsAdapter(getApplicationContext(), newsArrayList, newsArrayList.size());
+                            newsAdapter = new NewsAdapter(getApplicationContext(), newsArrayList, newsArrayList.size(),NewsActivity.this);
                             recyclerView.setAdapter(newsAdapter);
                             progressBar.setVisibility(View.GONE);
                         }
@@ -118,15 +129,6 @@ public class NewsActivity extends AppCompatActivity {
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "News", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override
@@ -149,5 +151,19 @@ public class NewsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onNewsTitleClick(View view, int position) {
+        Intent intent = new Intent(this, NewsDetailsActivity.class);
+        intent.putExtra(NewsDetailsActivity.INTENT_IMAGE_URL_KEY, newsArrayList.get(position).getUrlToImage());
+        intent.putExtra(NewsDetailsActivity.INTENT_DESCRIPTION_URL_KEY, newsArrayList.get(position).getDescription());
+         intent.putExtra(NewsDetailsActivity.INTENT_TITLE_URL_KEY,  newsArrayList.get(position).getTitle());
+
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                NewsActivity.this,
+                view,
+                SHARED_ELEMENT_TRANSITION_EXTRA);
+        ActivityCompat.startActivity(NewsActivity.this, intent, optionsCompat.toBundle());
     }
 }

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,11 +24,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
     private Context context;
     private ArrayList<NewsPojo> newsArrayList;
     private int totalCount;
+    private NewsTitleClickListener newsTitleClickListener;
 
-    public NewsAdapter(Context context, ArrayList<NewsPojo> newsArrayList, int totalCount) {
+    public NewsAdapter(Context context, ArrayList<NewsPojo> newsArrayList, int totalCount,
+                       NewsTitleClickListener clickListener) {
         this.context = context;
         this.totalCount = totalCount;
         this.newsArrayList = newsArrayList;
+        this.newsTitleClickListener = clickListener;
     }
 
     @NonNull
@@ -49,6 +53,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         Glide.with(context)
                 .load(newsArrayList.get(position).getUrlToImage())
                 .into(holder.iv_bk);
+
+        ViewCompat.setTransitionName(holder.iv_bk, newsArrayList.get(position).getTitle());
     }
 
     @Override
@@ -56,7 +62,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         return totalCount;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public interface NewsTitleClickListener{
+        void onNewsTitleClick(View view, int position);
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView tv_title, tv_desp;
         ImageView iv_bk;
@@ -66,6 +76,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
             tv_title = itemView.findViewById(R.id.tv_title);
             tv_desp = itemView.findViewById(R.id.tv_desp);
             iv_bk = itemView.findViewById(R.id.iv_bk);
+            iv_bk.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            switch (v.getId()){
+                case  R.id.iv_bk:
+                    newsTitleClickListener.onNewsTitleClick(v,getAdapterPosition());
+                    break;
+            }
         }
     }
 
