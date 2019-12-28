@@ -1,6 +1,11 @@
 package skr.app.dev.myapplication;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
@@ -10,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -27,6 +33,12 @@ public class NewsDetailsActivity extends AppCompatActivity {
     private ImageView imageViewNewsBk;
     private TextView textViewDescription, textViewTitle;
 
+
+    // Notification
+    private static final int NOTIFICATION_ID_0 = 0;
+    private static final String PRIMARY_CHANNEL_ID_0 = "primary_notification_channel_zero";
+    private NotificationManager mNotificationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +46,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        createNotificationChannel();
         getDataFromIntent();
 
         // Get reference from UI
@@ -49,6 +62,9 @@ public class NewsDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                sendNotification();
+
             }
         });
     }
@@ -82,6 +98,46 @@ public class NewsDetailsActivity extends AppCompatActivity {
     public void onBackPressed() {
         ActivityCompat.finishAfterTransition(this);
     }
+
+    //Helper Methods
+    public void createNotificationChannel(){
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            // Channel 0
+            NotificationChannel channel_0 = new NotificationChannel(
+                    PRIMARY_CHANNEL_ID_0,
+                    "Channel 0",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+
+            channel_0.enableLights(true);
+            channel_0.setLightColor(Color.GREEN);
+            channel_0.enableVibration(true);
+            channel_0.setDescription("Hello! This is the description of Notification Channel 0");
+            mNotificationManager.createNotificationChannel(channel_0);
+        }
+
+    }
+
+    public void sendNotification(){
+        Intent notifyIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ID_0,
+                notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,PRIMARY_CHANNEL_ID_0)
+                .setContentTitle("Today's news!")
+                .setContentText(title)
+                .setColor(Color.GREEN)
+                .setSmallIcon(R.drawable.ic_speaker_notes_black_24dp)
+                .setContentIntent(pendingIntent)
+                .setNumber(5)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setAutoCancel(true);
+        mNotificationManager.notify(NOTIFICATION_ID_0, builder.build());
+    }
+
 
 
 }
