@@ -27,9 +27,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         context = parent.getContext();
+
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         int layoutID = R.layout.recycler_item;
         View view = layoutInflater.inflate(layoutID, parent, false);
+
         return new MyViewHolder(view);
     }
 
