@@ -17,7 +17,7 @@ public class NetworkUtils {
     private static final String COUNTRY ="country";
     private static final String API_KEY  ="apiKey";
     private static final String countryValue ="us";
-    private static final String api_keyValue ="2331f4053d7647e8a3c595f6c0a49db0";
+    private static final String api_keyValue ="YOUR_API_KEY";
 
     public static URL buildURL(){
 
