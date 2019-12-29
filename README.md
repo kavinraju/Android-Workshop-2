@@ -1,5 +1,5 @@
 # Android-Workshop-2
-## This project consists of 3 Activites
+## This project consists of 3 Activities
 
 ## MainActivity
 This activity shows you how to implement a <b>RecyclerView</b> and other <b>Touch Events related with RecyclerView.</b> 
