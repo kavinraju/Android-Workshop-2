@@ -10,4 +10,4 @@ This activity shows you how to connect with internet to retrive data from [News 
 ## NewsDetailsActivity
 This activity shows details retrived in NewsActivity.
 
-In [<b>AndroidManifest.xml</b>](https://github.com/kavinraju/Android-Workshop-2/blob/master/app/src/main/AndroidManifest.xml) file you need to put the <b><intent-filter><b> tag in MainActivity for viewing the RecyclerView example and put the <b><intent-filter><b> tag in NewsActivity for viewing the News API example, while you're running the project.
+In [<b>AndroidManifest.xml</b>](https://github.com/kavinraju/Android-Workshop-2/blob/master/app/src/main/AndroidManifest.xml) file you need to put the <b> <intent-filter> <b> tag in MainActivity for viewing the RecyclerView example and put the <b><intent-filter><b> tag in NewsActivity for viewing the News API example, while you're running the project.
